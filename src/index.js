@@ -3,7 +3,8 @@ console.log("test");
 
 const ICONS = {
   "clear sky": "./images/01d.png",
-  "few clouds": "./images/02d.png",
+  clouds: "./images/02d.png",
+  "few clouds": "./images/03d.png",
   "scattered clouds": "./images/03d.png",
   "broken clouds": "./images/04d.png",
   "shower rain": "./images/09d.png",
@@ -101,7 +102,12 @@ async function getWeather(c, metric) {
       weather_content.main.temp
     )}${UNITS[metric]}`;
     weather_desc.textContent = `${weather_content.weather[0].main} `;
-    icon_img.src = ICONS[weather_content.weather[0].description];
+    if (ICONS[weather_content.weather[0].description]) {
+      icon_img.src = ICONS[weather_content.weather[0].description];
+    } else {
+      icon_img.src = ICONS["clouds"];
+    }
+    console.log(weather_content.weather[0].description);
     weather_desc.appendChild(icon_img);
     feel_temp.textContent = `Feels like ${convertStringToRoundedInteger(
       weather_content.main.feels_like
@@ -146,5 +152,5 @@ changeMetrics.addEventListener("click", () => {
     changeMetrics.textContent = `Change to ${UNITS["imperial"]}`;
   }
 
-//   console.log(changeMetrics.textContent);
+  //   console.log(changeMetrics.textContent);
 });
