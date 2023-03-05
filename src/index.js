@@ -9,6 +9,7 @@ const ICONS = {
   "broken clouds": "./images/04d.png",
   "shower rain": "./images/09d.png",
   rain: "./images/10d.png",
+  "light rain": "./images/10d.png",
   thunderstorm: "./images/11d.png",
   snow: "./images/13d.png",
   mist: "./images/01d.png",
