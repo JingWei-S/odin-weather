@@ -108,7 +108,7 @@ async function getWeather(c, metric) {
     } else {
       icon_img.src = ICONS["clouds"];
     }
-    console.log(weather_content.weather[0].description);
+    console.log('a' + ICONS["light rain"]);
     weather_desc.appendChild(icon_img);
     feel_temp.textContent = `Feels like ${convertStringToRoundedInteger(
       weather_content.main.feels_like
