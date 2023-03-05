@@ -21,9 +21,19 @@ body {
 
 .change-metric {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: 2rem;
+    right: 2rem;
     font-size: 1.5rem;
+    background-color: rgba(50, 50, 50, 0.9);
+    color: rgb(183, 183, 183);
+    border: none;
+    border-radius: 8px;
+    box-sizing: border-box;
+    padding: 0.4em;
+}
+
+.change-metric:hover {
+    color: white;
 }
 
 .main-content {
@@ -77,11 +87,23 @@ body {
     padding: 0.2rem;
     padding-left: 0.3rem;
     width: 20rem;
+    background-image: url('./images/search.png');
+    background-size: 1.2em;
+    background-position: right;
+    background-repeat: no-repeat;
 }
 
 input::placeholder {
     font-style: italic;
-  }
+}
+
+/* .search_input::before {
+    content: '\f099';
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+} */
 
 .error-message {
     margin-top: 0.5em;
