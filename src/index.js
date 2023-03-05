@@ -63,8 +63,11 @@ search_div.appendChild(error_msg);
 search_input.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     if (search_input.value === "") {
-      error_msg.textContent = "Enter a city that is cool.";
+      error_msg.textContent = "Enter a city that is cool 🙂";
     } else {
+      const curMetric =
+        changeMetrics.textContent.substr(-2) === "°C" ? "imperial" : "metric";
+      getWeather(search_input.value, curMetric);
       search_input.value = "";
       error_msg.textContent = "";
     }
@@ -72,33 +75,76 @@ search_input.addEventListener("keydown", (event) => {
 });
 
 async function getWeather(c, metric) {
-  const response = await fetch(
-    `https://api.openweathermap.org/data/2.5/weather?q=${c}&appid=7af91279945244b1cdc0b4f0fe9999aa&units=${metric}`,
-    { mode: "cors" }
-  );
-  const weather_content = await response.json();
-  console.log(weather_content);
-  city.textContent = weather_content.name + ", " + weather_content.sys.country;
-  const date = new Date(Date.now() + weather_content.timezone * 1000);
-  console.log(date);
-  const options = {
-    month: "long",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    hour12: true,
-    hourCycle: "h12",
-    separator: ":",
-  };
-  date_content.textContent = date.toUTCString().slice(0, -7);
-  main_temp.textContent = `${weather_content.main.temp}${UNITS[metric]}`;
-  weather_desc.textContent = `${weather_content.weather[0].main} `;
-  icon_img.src = ICONS[weather_content.weather[0].description];
-  weather_desc.appendChild(icon_img);
-  feel_temp.textContent = `Feels like ${weather_content.main.feels_like}${UNITS[metric]}`;
-  lo_temp.textContent = `L: ${weather_content.main.temp_max}${UNITS[metric]}`;
-  hi_temp.textContent = `H: ${weather_content.main.temp_min}${UNITS[metric]}`;
+  try {
+    console.log(metric);
+    const response = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?q=${c}&appid=7af91279945244b1cdc0b4f0fe9999aa&units=${metric}`,
+      { mode: "cors" }
+    );
+    const weather_content = await response.json();
+    // console.log(weather_content);
+    city.textContent =
+      weather_content.name + ", " + weather_content.sys.country;
+    const date = new Date(Date.now() + weather_content.timezone * 1000);
+    // console.log(date);
+    const options = {
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+      hourCycle: "h12",
+      separator: ":",
+    };
+    date_content.textContent = date.toUTCString().slice(0, -7);
+    main_temp.textContent = `${convertStringToRoundedInteger(
+      weather_content.main.temp
+    )}${UNITS[metric]}`;
+    weather_desc.textContent = `${weather_content.weather[0].main} `;
+    icon_img.src = ICONS[weather_content.weather[0].description];
+    weather_desc.appendChild(icon_img);
+    feel_temp.textContent = `Feels like ${convertStringToRoundedInteger(
+      weather_content.main.feels_like
+    )}${UNITS[metric]}`;
+    lo_temp.textContent = `L: ${convertStringToRoundedInteger(
+      weather_content.main.temp_min
+    )}${UNITS[metric]}`;
+    hi_temp.textContent = `H: ${convertStringToRoundedInteger(
+      weather_content.main.temp_max
+    )}${UNITS[metric]}`;
+  } catch (error) {
+    console.log("wrong city");
+    error_msg.textContent = "Enter a valid city 🙂";
+  }
 }
 
-getWeather("Brisbane,au", "metric");
+getWeather("Melbourne,au", "metric");
 // new Date(obj.dt*1000+(obj.timezone*1000))
+
+// helper function
+const convertStringToRoundedInteger = (str) => {
+  const floatNum = parseFloat(str);
+  const integerNum = Math.round(floatNum);
+  const integerStr = integerNum.toString();
+  return integerStr;
+};
+
+// change metrics
+const changeMetrics = document.querySelector(".change-metric");
+changeMetrics.addEventListener("click", () => {
+  // first get the city
+  const curCity = city.textContent;
+  // get current metric
+  const curMetric =
+    changeMetrics.textContent.substr(-2) === "°C" ? "imperial" : "metric";
+
+  if (curMetric === "metric") {
+    getWeather(curCity, "imperial");
+    changeMetrics.textContent = `Change to ${UNITS["metric"]}`;
+  } else {
+    getWeather(curCity, "metric");
+    changeMetrics.textContent = `Change to ${UNITS["imperial"]}`;
+  }
+
+//   console.log(changeMetrics.textContent);
+});
